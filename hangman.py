@@ -1,6 +1,6 @@
 import streamlit as st
 import random
-import mysql.connector as ctr
+import csv
 
 #Initialize session state variables
 if 'word' not in st.session_state:
