@@ -57,22 +57,17 @@ def guess_letter(letter):
 
 # Function to insert a score into the leaderboard
 def insert_score(name,score):
-    mycon=ctr.connect(host='localhost',user='root',password='mysql.password',database='Hangman')
-    mycur=mycon.cursor()
-    mycur.execute(f"INSERT INTO Leaderboard (Username,Difficulty,Score) VALUES ('{name}','{st.session_state.difficulty}',{score})")
-    mycon.commit()
-    mycon.close()
+    with open('leaderboard.csv','a') as f:
+        writer=csv.writer(f)
+        writer.writerow([name,st.session_state.difficulty,score])
     st.success('Record added to leaderboard')
     st.session_state.game_over=True
 
 # Function to fetch leaderboard data
 def fetch_leaderboard():
-    mycon=ctr.connect(host='localhost',user='root',password='mysql.password',database='Hangman')
-    mycur=mycon.cursor(dictionary=True)
-    mycur.execute('SELECT Username,Score FROM Leaderboard ORDER BY Score DESC')
-    results=mycur.fetchall()
-    mycon.close()
-    return results
+   with open('leaderboard.csv','r') as f:
+       results=list(csv.DictReader(f))
+       return results
 
 #Main Game
 st.set_page_config(page_title='Hangman',page_icon='💀',layout='centered')
