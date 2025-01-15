@@ -66,7 +66,8 @@ def insert_score(name,score):
 # Function to fetch leaderboard data
 def fetch_leaderboard():
    with open('leaderboard.csv','r') as f:
-       results=list(csv.DictReader(f))
+       records=list(csv.DictReader(f))
+       results=sorted(records,key=lambda x:int(x['Score']),reverse=True)
        return results
 
 #Main Game
