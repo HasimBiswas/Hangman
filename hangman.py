@@ -61,13 +61,11 @@ def insert_score(name,score):
         writer=csv.writer(f)
         writer.writerow([name,st.session_state.difficulty,score])
     st.success('Record added to leaderboard')
-    st.session_state.game_over=True
 
 # Function to fetch leaderboard data
 def fetch_leaderboard():
    with open('leaderboard.csv','r') as f:
-       records=list(csv.DictReader(f))
-       results=sorted(records,key=lambda x:int(x['Score']),reverse=True)
+       results=list(csv.DictReader(f))
        return results
 
 #Main Game
@@ -95,9 +93,25 @@ if st.session_state.game_started:
     st.write(f"Guessed Letters: {', '.join(st.session_state.guessed_letters)}")
     st.write(f"Attempts left: {st.session_state.attempts_left}")
     draw_hangman()
-    
+
+    #Check for win or loss
+    if all(letter in st.session_state.guessed_letters for letter in st.session_state.word):
+        st.success('🎉You win!!!')
+        st.session_state.game_over=True
+        
+        #Inputting username and inserting score to leaderboard
+        with st.form(key='For_leaderboard'):
+            name=st.text_input('Enter your name for the leaderboard:')
+            submit_score=st.form_submit_button(label='Submit Score')
+        if submit_score and name:
+            insert_score(name,st.session_state.attempts_left)
+
+    elif st.session_state.attempts_left<=0:
+        st.error('Game over!')
+        st.session_state.game_over=True
+
+    #Guessing an alphabet
     if not st.session_state.game_over:
-        #Guessing an alphabet
         with st.form(key='Guess_form'):
             guess=st.text_input('Guess an alphabet:',max_chars=1).upper()
             submit_guess=st.form_submit_button(label='Submit Guess')
@@ -105,19 +119,6 @@ if st.session_state.game_started:
             st.session_state.guess=guess
             guess_letter(st.session_state.guess)
             st.rerun()
-
-        #Check for win or loss
-        if all(letter in st.session_state.guessed_letters for letter in st.session_state.word):
-            st.success('🎉You win!!!')
-            #Inputting username and inserting score to leaderboard
-            with st.form(key='For_leaderboard'):
-                name=st.text_input('Enter your name for the leaderboard:')
-                submit_score=st.form_submit_button(label='Submit Score')
-            if submit_score and name:
-                insert_score(name,st.session_state.attempts_left)
-        elif st.session_state.attempts_left<=0:
-            st.error('Game over!')
-            st.session_state.game_over=True
 
     #Restart game button
     if st.button('Restart Game'):
