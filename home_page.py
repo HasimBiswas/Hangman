@@ -7,7 +7,7 @@ games = {
         "description":"Ping Pong, also known as table tennis, is a fast-paced game where players use paddles to hit a lightweight ball across a table divided by a net. The objective is to score points by making the ball land on the opponent's side without being returned.",
         "link":"https://siddharth-sinha00.itch.io/ping-pong"
     },
-    "Snake": {
+    "Classic Snake": {
         "description":"Snake Game is a classic arcade game where players guide a growing snake to eat food while avoiding collisions.",
         "link":"https://siddharth-sinha00.itch.io/classic-snake"
     },
